@@ -4,6 +4,8 @@ Northstar is a production-grade market intelligence workspace built for startup 
 
 This project was built for the **Kaggle 5-Day AI Agents Intensive Course** Capstone Project.
 
+🌐 **Live Demo Endpoint:** [https://aayush.foo](https://aayush.foo)
+
 ---
 
 ## 🏗️ Architecture Overview
