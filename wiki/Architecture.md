@@ -1,5 +1,3 @@
-# Architecture
-
 Northstar is structured as a multi-agent system. Below is a detailed view of the orchestration, planning, and execution components.
 
 ## 🏗️ System Architecture Flowchart

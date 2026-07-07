@@ -1,5 +1,3 @@
-# Security Model
-
 Northstar enforces several production-grade security postures designed to prevent abuse and protect host resources:
 
 ## 1. Inbound Request Bounding & Rate Limiting

@@ -1,5 +1,3 @@
-# Agent Skills & Model Context Protocol (MCP)
-
 Northstar integrates custom procedural skills and Model Context Protocol (MCP) routing to optimize context window efficiency and extend agent execution capabilities.
 
 ## 🧠 Agent Skills Runtime
