@@ -34,13 +34,13 @@ def main():
     output_dir = Path("screenshots")
     output_dir.mkdir(exist_ok=True)
     
-    # Standard timestamps for the 5-minute video pitch:
+    # Standard timestamps for the 2m 43s video pitch:
     timestamps = {
         "00:00:10": "screenshots/intro_dashboard.png",
         "00:01:15": "screenshots/architecture_overview.png",
-        "00:02:30": "screenshots/live_research_results.png",
-        "00:03:45": "screenshots/customer_advisory_board.png",
-        "00:04:30": "screenshots/competitor_war_room.png"
+        "00:02:00": "screenshots/live_research_results.png",
+        "00:02:25": "screenshots/customer_advisory_board.png",
+        "00:02:40": "screenshots/competitor_war_room.png"
     }
     
     print(f"Processing '{video_path}'...")
