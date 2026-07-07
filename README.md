@@ -1,5 +1,7 @@
 # 🧭 Northstar: Market Intelligence Workspace
 
+![Northstar Cover](northstar_cover_light.png)
+
 Northstar is a production-grade market intelligence workspace built for startup concepts. Running inside a single Docker Compose stack, it implements a multi-agent validation pipeline to perform live web research, audit competitive signals, estimate TAM/SAM/SOM, and run interactive persona-constrained simulations.
 
 This project was built for the **Kaggle 5-Day AI Agents Intensive Course** Capstone Project.
