@@ -1,0 +1,1700 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Northstar — Market Intelligence</title>
+    <link rel="icon" href="static/favicon.ico" sizes="any" />
+    <link rel="icon" href="static/northstar-icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="static/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f5f5f7;
+        --card: #ffffff;
+        --card-2: #fafafa;
+        --ink: #1d1d1f;
+        --muted: #515154;
+        --subtle: #86868b;
+        --line: #ececf0;
+        --line-strong: #d2d2d7;
+        --accent: #0071e3;
+        --accent-ink: #0059b3;
+        --accent-wash: #eaf3fe;
+        --good: #1d7a33;
+        --good-wash: #e8f5ec;
+        --warn: #9a5b00;
+        --warn-wash: #fdf1df;
+        --bad: #d70015;
+        --bad-wash: #fdeced;
+        --info: #0071e3;
+        --info-wash: #eaf3fe;
+        --sans: "Inter", -apple-system, "SF Pro Text", "Segoe UI", sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+        --r-lg: 18px;
+        --r-md: 12px;
+        --r-pill: 980px;
+        --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-pop: 0 8px 32px rgba(0, 0, 0, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.5;
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      ::selection {
+        background: var(--accent-wash);
+      }
+
+      .app-shell {
+        max-width: 1520px;
+        margin: 0 auto;
+        padding: 0 32px 72px;
+      }
+
+      /* ---------- Masthead ---------- */
+
+      .masthead {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 32px;
+        padding: 30px 0 22px;
+      }
+
+      .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-width: 0;
+      }
+
+      .mark {
+        width: 48px;
+        height: 48px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: var(--ink);
+      }
+
+      .mark img {
+        width: 28px;
+        height: 28px;
+      }
+
+      .brand-copy h1 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.022em;
+      }
+
+      .brand-copy p {
+        margin: 4px 0 0;
+        color: var(--subtle);
+        font-size: 0.9rem;
+        letter-spacing: -0.005em;
+      }
+
+      .status-strip {
+        display: flex;
+        align-items: stretch;
+        flex: none;
+        padding: 12px 4px;
+        background: var(--card);
+        border-radius: var(--r-md);
+        box-shadow: var(--shadow-card);
+      }
+
+      .status-cell {
+        display: grid;
+        gap: 2px;
+        align-content: start;
+        padding: 0 20px;
+        border-left: 1px solid var(--line);
+      }
+
+      .status-cell:first-child {
+        border-left: 0;
+      }
+
+      .status-cell span {
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--subtle);
+      }
+
+      .status-cell strong {
+        font-family: var(--mono);
+        font-size: 0.84rem;
+        font-weight: 500;
+        color: var(--ink);
+        max-width: 220px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .status-link {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 6px;
+        color: var(--accent);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        text-decoration: none;
+      }
+
+      .status-link:hover {
+        text-decoration: underline;
+      }
+
+      .status-good {
+        color: var(--good) !important;
+      }
+
+      .status-warn {
+        color: var(--warn) !important;
+      }
+
+      .status-bad {
+        color: var(--bad) !important;
+      }
+
+      /* ---------- Tabs (segmented control) ---------- */
+
+      .tabs {
+        display: inline-flex;
+        gap: 4px;
+        padding: 4px;
+        background: #e8e8ed;
+        border-radius: var(--r-pill);
+        overflow-x: auto;
+        scrollbar-width: none;
+        max-width: 100%;
+      }
+
+      .tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .tab {
+        padding: 8px 22px;
+        border: 0;
+        border-radius: var(--r-pill);
+        background: transparent;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+        white-space: nowrap;
+        transition: color 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
+      }
+
+      .tab:hover {
+        color: var(--ink);
+      }
+
+      .tab.active {
+        color: var(--ink);
+        background: var(--card);
+        font-weight: 600;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+      }
+
+      /* ---------- Workspace ---------- */
+
+      .workspace {
+        display: grid;
+        grid-template-columns: 340px minmax(0, 1fr);
+        gap: 24px;
+        margin-top: 24px;
+        align-items: start;
+      }
+
+      .briefing {
+        position: sticky;
+        top: 24px;
+        display: grid;
+        gap: 20px;
+        min-width: 0;
+      }
+
+      .stage {
+        min-width: 0;
+      }
+
+      /* ---------- Modules ---------- */
+
+      .module {
+        border-radius: var(--r-lg);
+        background: var(--card);
+        box-shadow: var(--shadow-card);
+        border: 1px solid rgba(17, 24, 39, 0.04);
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      }
+
+      .module:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.1);
+        border-color: rgba(255, 105, 50, 0.12);
+      }
+
+      .module-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 14px;
+        padding: 16px 20px 13px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .module-header h2,
+      .module-header h3 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+      }
+
+      .module-header p {
+        margin: 3px 0 0;
+        color: var(--subtle);
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .module-body {
+        padding: 20px;
+      }
+
+      .panel {
+        animation: panel-enter 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      /* ---------- Form ---------- */
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        color: var(--muted);
+      }
+
+      textarea,
+      input {
+        width: 100%;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--r-md);
+        background: var(--card);
+        padding: 10px 12px;
+        font-size: 0.92rem;
+        outline: none;
+        transition: border-color 120ms ease, box-shadow 120ms ease;
+      }
+
+      textarea:focus,
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-wash);
+      }
+
+      textarea {
+        min-height: 110px;
+        line-height: 1.5;
+        resize: vertical;
+      }
+
+      .field-grid {
+        display: grid;
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      /* ---------- Chip fields ---------- */
+
+      .chip-field {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        min-height: 44px;
+        padding: 7px 8px;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--r-md);
+        background: var(--card);
+        transition: border-color 120ms ease, box-shadow 120ms ease;
+      }
+
+      .chip-field:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-wash);
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        max-width: 100%;
+        padding: 4px 7px 4px 12px;
+        border-radius: var(--r-pill);
+        background: var(--ink);
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+      }
+
+      .chip span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .chip button {
+        display: grid;
+        place-items: center;
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+        font-size: 0.68rem;
+        line-height: 1;
+      }
+
+      .chip button:hover {
+        background: rgba(255, 255, 255, 0.45);
+      }
+
+      .chip-field input {
+        flex: 1;
+        min-width: 130px;
+        width: auto;
+        border: 0;
+        padding: 4px 6px;
+        background: transparent;
+        box-shadow: none !important;
+      }
+
+      .chip-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 10px;
+        border: 0;
+        border-radius: var(--r-pill);
+        background: transparent;
+        color: var(--accent);
+        font-size: 0.84rem;
+        font-weight: 500;
+      }
+
+      .chip-add:hover {
+        background: var(--accent-wash);
+      }
+
+      .select-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        z-index: 30;
+        max-height: 264px;
+        overflow: auto;
+        padding: 6px;
+        border-radius: var(--r-md);
+        background: var(--card);
+        box-shadow: var(--shadow-pop);
+      }
+
+      .select-option {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 8px 12px;
+        border: 0;
+        border-radius: 9px;
+        background: none;
+        text-align: left;
+        font-size: 0.88rem;
+        color: var(--ink);
+      }
+
+      .select-option:hover {
+        background: var(--bg);
+      }
+
+      .select-option.selected {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .field-hint {
+        margin: 6px 0 0;
+        color: var(--subtle);
+        font-size: 0.74rem;
+        line-height: 1.45;
+      }
+
+      .form-error {
+        margin: 12px 0 0;
+        padding: 10px 12px;
+        border-radius: var(--r-md);
+        background: var(--bad-wash);
+        color: var(--bad);
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+
+      /* ---------- Buttons ---------- */
+
+      .primary-action,
+      .secondary-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 44px;
+        margin-top: 16px;
+        padding: 0 20px;
+        border-radius: var(--r-pill);
+        font-size: 0.92rem;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        transition: background-color 140ms ease, color 140ms ease, opacity 140ms ease;
+      }
+
+      .primary-action {
+        border: 0;
+        color: #fff;
+        background: var(--ink);
+      }
+
+      .primary-action:hover:not([disabled]) {
+        background: #000;
+      }
+
+      .primary-action[disabled] {
+        cursor: wait;
+        opacity: 0.55;
+      }
+
+      .secondary-action {
+        border: 1px solid var(--line-strong);
+        color: var(--ink);
+        background: var(--card);
+      }
+
+      .secondary-action:hover:not([disabled]) {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: #fff;
+      }
+
+      .secondary-action[disabled] {
+        cursor: not-allowed;
+        color: var(--subtle);
+        background: var(--card-2);
+      }
+
+      .raw-toggle {
+        border: 1px solid var(--line-strong);
+        border-radius: var(--r-pill);
+        background: transparent;
+        color: var(--subtle);
+        padding: 5px 12px;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+
+      .raw-toggle:hover {
+        color: var(--ink);
+        border-color: var(--ink);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* ---------- Layouts ---------- */
+
+      .research-layout,
+      .simulation-layout,
+      .landing-layout {
+        display: grid;
+        gap: 20px;
+      }
+
+      .research-layout {
+        grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      }
+
+      .research-column,
+      .research-sidebar {
+        display: grid;
+        gap: 20px;
+        align-items: start;
+        min-width: 0;
+      }
+
+      .research-sidebar {
+        gap: 14px;
+      }
+
+      .simulation-layout,
+      .landing-layout {
+        grid-template-columns: minmax(300px, 0.42fr) minmax(0, 0.58fr);
+        align-items: start;
+      }
+
+      /* ---------- Metrics ---------- */
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .metric {
+        min-width: 0;
+        padding: 13px 15px;
+        border-radius: var(--r-md);
+        background: var(--card-2);
+        border: 1px solid var(--line);
+        border-left-width: 3px;
+      }
+
+      .metric span {
+        display: flex;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--subtle);
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 6px;
+        font-family: var(--mono);
+        font-size: clamp(1rem, 1.6vw, 1.3rem);
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+        overflow-wrap: anywhere;
+      }
+
+      .metric-good {
+        border-left-color: var(--good);
+      }
+
+      .metric-warn {
+        border-left-color: var(--warn);
+      }
+
+      .metric-bad {
+        border-left-color: var(--bad);
+      }
+
+      .metric-info {
+        border-left-color: var(--info);
+      }
+
+      .kpi-stack {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .kpi-stack .metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .kpi-stack .metric strong {
+        margin-top: 0;
+        font-size: 1.3rem;
+        white-space: nowrap;
+      }
+
+      .info-tip {
+        display: inline-grid;
+        place-items: center;
+        width: 15px;
+        height: 15px;
+        margin-left: 6px;
+        padding: 0;
+        border-radius: 999px;
+        border: 1px solid var(--line-strong);
+        color: var(--subtle);
+        background: transparent;
+        font-size: 0.6rem;
+        line-height: 1;
+        position: relative;
+      }
+
+      .info-tip:hover,
+      .info-tip:focus {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .info-tip:hover::after,
+      .info-tip:focus::after {
+        content: attr(data-tip);
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 8px);
+        transform: translateX(-50%);
+        width: min(260px, 70vw);
+        padding: 9px 12px;
+        border-radius: var(--r-md);
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--sans);
+        font-size: 0.76rem;
+        line-height: 1.45;
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 400;
+        box-shadow: var(--shadow-pop);
+        z-index: 20;
+      }
+
+      /* ---------- Trace / log ---------- */
+
+      .trace-list {
+        min-height: 200px;
+        max-height: 380px;
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 105, 50, 0.28) rgba(148, 163, 184, 0.08);
+      }
+
+      .trace-list::-webkit-scrollbar,
+      .output-pane::-webkit-scrollbar,
+      .doc-viewer::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .trace-list::-webkit-scrollbar-thumb,
+      .output-pane::-webkit-scrollbar-thumb,
+      .doc-viewer::-webkit-scrollbar-thumb {
+        background: rgba(255, 105, 50, 0.24);
+        border-radius: 999px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+
+      .trace-item {
+        display: grid;
+        grid-template-columns: 14px minmax(0, 1fr);
+        gap: 8px;
+        padding: 7px 0;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.74rem;
+        line-height: 1.5;
+        animation: trace-enter 260ms ease;
+      }
+
+      .trace-item:last-child {
+        border-bottom: 0;
+      }
+
+      .trace-dot {
+        width: 6px;
+        height: 6px;
+        margin-top: 6px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      .trace-item.error {
+        color: var(--bad);
+      }
+
+      .trace-item.error .trace-dot {
+        background: var(--bad);
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--muted);
+        font-family: var(--mono);
+        line-height: 1.55;
+        font-size: 0.78rem;
+      }
+
+      #trace,
+      #result,
+      #landingResult {
+        display: none;
+      }
+
+      /* ---------- Empty states ---------- */
+
+      .empty-state {
+        display: grid;
+        place-items: center;
+        min-height: 140px;
+        padding: 24px;
+        border: 1px dashed var(--line-strong);
+        border-radius: var(--r-md);
+        background: var(--card-2);
+        text-align: center;
+        color: var(--subtle);
+        font-size: 0.86rem;
+        line-height: 1.5;
+      }
+
+      .loading-shell {
+        display: grid;
+        gap: 12px;
+      }
+
+      .loading-bar {
+        position: relative;
+        overflow: hidden;
+        height: 14px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.16);
+      }
+
+      .loading-bar::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, rgba(255, 105, 50, 0.3), transparent);
+        animation: shimmer 1.35s infinite;
+      }
+
+      .loading-wide { width: 100%; }
+      .loading-mid { width: 74%; }
+      .loading-short { width: 48%; }
+
+      .empty-state strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      /* ---------- Cards ---------- */
+
+      .competitor-list,
+      .persona-list,
+      .source-list,
+      .hook-list,
+      .response-stack,
+      .source-group-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .competitor-card,
+      .persona-card,
+      .source-card,
+      .hook-card,
+      .chat-card {
+        padding: 15px 17px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        background: var(--card);
+        transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+      }
+
+      .competitor-card:hover,
+      .persona-card:hover,
+      .source-card:hover,
+      .hook-card:hover,
+      .chat-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 105, 50, 0.18);
+        box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
+      }
+
+      .competitor-top {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 14px;
+        align-items: start;
+      }
+
+      .competitor-card h4,
+      .persona-card h4,
+      .source-card h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+      }
+
+      .price-pill,
+      .tag,
+      .evidence-label {
+        display: inline-flex;
+        align-items: center;
+        max-width: 100%;
+        padding: 2px 10px;
+        border-radius: var(--r-pill);
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        font-weight: 500;
+        line-height: 1.7;
+        letter-spacing: 0.01em;
+      }
+
+      .price-pill {
+        border: 1px solid var(--ink);
+        color: var(--ink);
+        background: transparent;
+        white-space: nowrap;
+        font-weight: 600;
+      }
+
+      .tag {
+        border: 1px solid var(--line);
+        color: var(--muted);
+        background: var(--card-2);
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-align: left;
+      }
+
+      .tone-good {
+        color: var(--good);
+        border-color: transparent;
+        background: var(--good-wash);
+      }
+
+      .tone-warn {
+        color: var(--warn);
+        border-color: transparent;
+        background: var(--warn-wash);
+      }
+
+      .tone-bad {
+        color: var(--bad);
+        border-color: transparent;
+        background: var(--bad-wash);
+      }
+
+      .tone-info {
+        color: var(--info);
+        border-color: transparent;
+        background: var(--info-wash);
+      }
+
+      .tone-neutral {
+        color: var(--muted);
+        border-color: var(--line-strong);
+        background: transparent;
+      }
+
+      .feature-row,
+      .evidence-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+
+      .source-link {
+        display: inline-block;
+        margin-top: 8px;
+        color: var(--accent);
+        text-decoration: none;
+        font-family: var(--mono);
+        font-size: 0.74rem;
+        word-break: break-all;
+      }
+
+      .source-link:hover {
+        text-decoration: underline;
+      }
+
+      .evidence-label {
+        color: var(--warn);
+        background: var(--warn-wash);
+        text-transform: uppercase;
+        font-size: 0.6rem;
+        letter-spacing: 0.06em;
+      }
+
+      .evidence-label-good {
+        color: var(--good);
+        background: var(--good-wash);
+      }
+
+      .evidence-label-warn {
+        color: var(--warn);
+        background: var(--warn-wash);
+      }
+
+      .section-kicker {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+      }
+
+      .source-group + .source-group {
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+
+      .source-group-header {
+        margin-bottom: 12px;
+      }
+
+      .source-group-header p,
+      .evidence-copy,
+      .insight-line,
+      .chat-bubble p,
+      .doc-viewer p,
+      .doc-viewer li {
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.55;
+        font-size: 0.88rem;
+      }
+
+      .source-group-header p {
+        margin-top: 4px;
+        font-size: 0.8rem;
+        color: var(--subtle);
+      }
+
+      .evidence-copy-warn {
+        color: var(--warn);
+      }
+
+      .source-card-fact {
+        border-left: 3px solid var(--good);
+      }
+
+      .source-card-assumption {
+        border-left: 3px solid var(--warn);
+      }
+
+      /* ---------- Document viewer ---------- */
+
+      .doc-viewer {
+        min-height: 300px;
+        max-height: 720px;
+        overflow: auto;
+      }
+
+      .doc-viewer h2,
+      .doc-viewer h3,
+      .doc-viewer h4 {
+        margin: 22px 0 8px;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+      }
+
+      .doc-viewer h2:first-child,
+      .doc-viewer h3:first-child {
+        margin-top: 0;
+      }
+
+      .doc-viewer h2 {
+        font-size: 1.35rem;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .doc-viewer p,
+      .doc-viewer li {
+        font-size: 0.92rem;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+
+      .doc-viewer ul,
+      .doc-viewer ol {
+        margin: 8px 0 14px 20px;
+        padding: 0;
+      }
+
+      .doc-viewer code {
+        font-family: var(--mono);
+        font-size: 0.82em;
+        background: var(--bg);
+        border-radius: 6px;
+        padding: 2px 6px;
+        color: var(--ink);
+      }
+
+      .doc-code {
+        margin: 12px 0;
+        padding: 14px 16px;
+        border-radius: var(--r-md);
+        background: var(--bg);
+        color: var(--ink);
+        overflow: auto;
+      }
+
+      .doc-code code {
+        background: none;
+        padding: 0;
+      }
+
+      /* ---------- Simulations / chat ---------- */
+
+      .output-pane {
+        min-height: 320px;
+        max-height: 720px;
+        overflow: auto;
+      }
+
+      .chat-thread {
+        display: grid;
+        gap: 12px;
+      }
+
+      .chat-bubble {
+        padding: 14px 17px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        background: var(--card);
+        animation: bubble-enter 220ms ease;
+      }
+
+      .chat-bubble.user {
+        background: var(--accent-wash);
+        border-color: transparent;
+      }
+
+      .chat-bubble.system {
+        background: var(--card-2);
+        border-color: transparent;
+      }
+
+      .chat-meta {
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--subtle);
+      }
+
+      .chat-bubble p {
+        color: var(--ink);
+      }
+
+      .generator-line {
+        margin-top: 8px;
+        color: var(--subtle);
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .fit-grid,
+      .risk-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .fit-tile,
+      .risk-card {
+        padding: 11px 13px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        background: var(--card-2);
+      }
+
+      .fit-tile span,
+      .risk-card span {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--subtle);
+      }
+
+      .fit-tile strong,
+      .risk-card strong {
+        display: block;
+        margin-top: 4px;
+        font-family: var(--mono);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .risk-card {
+        border-left-width: 3px;
+      }
+
+      .risk-high {
+        border-left-color: var(--bad);
+      }
+
+      .risk-medium {
+        border-left-color: var(--warn);
+      }
+
+      .risk-low {
+        border-left-color: var(--good);
+      }
+
+      .risk-card p,
+      .fit-tile p {
+        margin: 6px 0 0;
+        font-size: 0.8rem;
+        line-height: 1.45;
+        color: var(--muted);
+      }
+
+      .muted-line {
+        color: var(--subtle) !important;
+        font-size: 0.8rem !important;
+      }
+
+      @keyframes shimmer {
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      @keyframes panel-enter {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes trace-enter {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes bubble-enter {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .chat-card strong {
+        font-size: 0.98rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .chat-card .tag {
+        margin-left: 8px;
+      }
+
+      /* ---------- Landing preview ---------- */
+
+      .landing-hero {
+        padding: 44px 36px;
+        border-radius: var(--r-lg);
+        background: linear-gradient(160deg, #111113, #1d1d1f 60%, #26262b);
+        color: #f5f5f7;
+      }
+
+      .landing-hero h3 {
+        margin: 0;
+        font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+        font-weight: 700;
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+      }
+
+      .landing-hero p {
+        margin: 14px 0 0;
+        color: #a1a1a6;
+        font-size: 0.98rem;
+        line-height: 1.6;
+        max-width: 60ch;
+        letter-spacing: -0.005em;
+      }
+
+      /* ---------- Responsive ---------- */
+
+      @media (max-width: 1280px) {
+        .workspace,
+        .research-layout,
+        .simulation-layout,
+        .landing-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .briefing {
+          position: static;
+        }
+
+        .masthead {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 18px;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .app-shell {
+          padding: 0 16px 48px;
+        }
+
+        .metric-grid,
+        .fit-grid,
+        .risk-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .status-strip {
+          flex-wrap: wrap;
+          gap: 10px;
+          padding: 12px 16px;
+        }
+
+        .status-cell {
+          border-left: 0;
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="masthead">
+        <div class="brand-row">
+          <div class="mark"><img src="static/northstar-icon.svg" alt="" /></div>
+          <div class="brand-copy">
+            <h1>Northstar</h1>
+            <p>Live market research, audited evidence, and competitive simulation for one startup concept.</p>
+          </div>
+        </div>
+
+        <div class="status-strip" aria-label="Run status">
+          <div class="status-cell"><span>Run</span><strong id="runState">Ready</strong></div>
+          <div class="status-cell"><span>Audit</span><strong id="auditState">Not run</strong></div>
+          <div class="status-cell"><span>Competitors</span><strong id="competitorCount">0</strong></div>
+          <div class="status-cell">
+            <span>Artifact</span>
+            <strong id="outputPath">—</strong>
+            <a class="status-link hidden" id="outputPdfLink" href="#" target="_blank" rel="noreferrer">Download PDF</a>
+          </div>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="Northstar modes">
+        <button class="tab active" data-tab="research">Research</button>
+        <button class="tab" data-tab="board">Advisory Board</button>
+        <button class="tab" data-tab="warroom">War Room</button>
+        <button class="tab" data-tab="about">About Developer</button>
+      </nav>
+
+      <div class="workspace">
+        <aside class="briefing">
+          <section class="module">
+            <div class="module-header">
+              <div>
+                <h2>Startup Brief</h2>
+              </div>
+            </div>
+            <div class="module-body">
+              <label for="concept">Startup concept</label>
+              <textarea id="concept">An app that tells investors whether a house is a good investment using DSCR and other publicly available information.</textarea>
+
+              <div class="field-grid">
+                <div>
+                  <label id="geoLabel">Geography</label>
+                  <div class="chip-field" id="geoField">
+                    <button type="button" class="chip-add" id="geoTrigger" aria-haspopup="listbox">+ Add region</button>
+                    <div class="select-menu hidden" id="geoMenu" role="listbox" aria-labelledby="geoLabel"></div>
+                  </div>
+                </div>
+                <div>
+                  <label for="sectorInput">Sectors</label>
+                  <div class="chip-field" id="sectorField">
+                    <input id="sectorInput" placeholder="Type a sector, press Enter" autocomplete="off" />
+                  </div>
+                  <p class="field-hint">Multi-word sectors welcome — press Enter after each one.</p>
+                </div>
+                <div>
+                  <label for="funding">Funding / scale</label>
+                  <input id="funding" value="Seed stage, bootstrapped pilot" placeholder="Funding / scale" />
+                </div>
+              </div>
+
+              <button class="primary-action" id="run">Run Research</button>
+              <div class="form-error hidden" id="formError"></div>
+            </div>
+          </section>
+
+          <section class="module">
+            <div class="module-header">
+              <div>
+                <h3>Agent Log</h3>
+                <p>Search, audit, and write-path activity as it happens.</p>
+              </div>
+            </div>
+            <div class="module-body">
+              <div class="trace-list" id="traceList">
+                <div class="empty-state">
+                  <div><strong>Idle</strong>Run research to watch Northstar search, audit, and write the artifact.</div>
+                </div>
+              </div>
+              <pre id="trace"></pre>
+            </div>
+          </section>
+        </aside>
+
+        <section class="stage">
+          <section class="panel" id="research">
+            <div class="research-layout">
+              <div class="research-column">
+                <section class="module">
+                  <div class="module-header">
+                    <div>
+                      <h2>Market Readout</h2>
+                      <p>Pricing, audit posture, and buyer personas from the latest run.</p>
+                    </div>
+                    <button class="raw-toggle" id="rawToggle">Raw JSON</button>
+                  </div>
+                  <div class="module-body">
+                    <div id="marketReadout">
+                      <div class="empty-state"><div><strong>No run yet</strong>Competitor evidence, pricing signals, and personas render here.</div></div>
+                    </div>
+                    <pre id="result"></pre>
+                  </div>
+                </section>
+
+                <section class="module">
+                  <div class="module-header">
+                    <div>
+                      <h2>Competitor Field</h2>
+                      <p>Pricing posture, source quality, and exploitable weaknesses per vendor.</p>
+                    </div>
+                  </div>
+                  <div class="module-body">
+                    <div class="competitor-list" id="competitorList">
+                      <div class="empty-state"><div><strong>No competitors loaded</strong>Live competitor records appear after research.</div></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="module">
+                  <div class="module-header">
+                    <div>
+                      <h2>Market Document</h2>
+                      <p>Readable preview of the generated <code>.market.md</code> artifact.</p>
+                    </div>
+                  </div>
+                  <div class="module-body doc-viewer" id="marketDoc">
+                    <div class="empty-state"><div><strong>No document yet</strong>The markdown artifact renders here after research.</div></div>
+                  </div>
+                </section>
+              </div>
+
+              <aside class="research-sidebar">
+                <section class="module">
+                  <div class="module-header">
+                    <div>
+                      <h2>Market Size</h2>
+                      <p>Bottom-up model, cross-checked against a top-down source.</p>
+                    </div>
+                  </div>
+                  <div class="module-body">
+                    <div class="metric-grid kpi-stack">
+                      <div class="metric metric-info">
+                        <span>TAM <button class="info-tip" type="button" data-tip="Total Addressable Market: the full annual revenue opportunity if every possible buyer in the modeled market purchased.">?</button></span>
+                        <strong id="tamValue">—</strong>
+                      </div>
+                      <div class="metric metric-warn">
+                        <span>SAM <button class="info-tip" type="button" data-tip="Serviceable Addressable Market: the reachable slice of TAM based on geography, segment, and go-to-market scope.">?</button></span>
+                        <strong id="samValue">—</strong>
+                      </div>
+                      <div class="metric metric-good">
+                        <span>SOM <button class="info-tip" type="button" data-tip="Serviceable Obtainable Market: the realistic near-term share Northstar models as capture-ready.">?</button></span>
+                        <strong id="somValue">—</strong>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="module">
+                  <div class="module-header">
+                    <div>
+                      <h2>Citations</h2>
+                      <p>Cited facts kept separate from modeled assumptions.</p>
+                    </div>
+                  </div>
+                  <div class="module-body">
+                    <div class="source-list" id="sourceList">
+                      <div class="empty-state"><div><strong>No evidence yet</strong>Citations and assumptions are split here after audit.</div></div>
+                    </div>
+                  </div>
+                </section>
+              </aside>
+            </div>
+          </section>
+
+          <section class="panel hidden" id="board">
+            <div class="simulation-layout">
+              <section class="module">
+                <div class="module-header">
+                  <div>
+                    <h2>Customer Advisory Board</h2>
+                    <p>Pitch AI buyer personas built from the research run.</p>
+                  </div>
+                </div>
+                <div class="module-body">
+                  <label for="boardPrompt">Pitch prompt</label>
+                  <textarea id="boardPrompt">Would you pay $99/month for this system?</textarea>
+                  <button class="secondary-action" id="boardRun" disabled>Simulate Customer Feedback</button>
+                </div>
+              </section>
+
+              <section class="module">
+                <div class="module-header">
+                  <div>
+                    <h2>Board Response</h2>
+                    <p>Buying decisions, friction points, and fit scores per persona.</p>
+                  </div>
+                </div>
+                <div class="module-body output-pane">
+                  <div class="chat-thread" id="boardResult">
+                    <div class="empty-state"><div><strong>No session</strong>Run research first, then pitch the board.</div></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="panel hidden" id="warroom">
+            <div class="simulation-layout">
+              <section class="module">
+                <div class="module-header">
+                  <div>
+                    <h2>Competitor War Room</h2>
+                    <p>Test a launch move against simulated incumbent responses.</p>
+                  </div>
+                </div>
+                <div class="module-body">
+                  <label for="warPrompt">Launch scenario</label>
+                  <textarea id="warPrompt">Launching at $49/mo with offline support.</textarea>
+                  <button class="secondary-action" id="warRun" disabled>Simulate Competitor Response</button>
+                </div>
+              </section>
+
+              <section class="module">
+                <div class="module-header">
+                  <div>
+                    <h2>War Room Response</h2>
+                    <p>Threat grades and counter-moves from named competitors.</p>
+                  </div>
+                </div>
+                <div class="module-body output-pane">
+                  <div class="chat-thread" id="warResult">
+                    <div class="empty-state"><div><strong>No session</strong>Run research first, then open the war room.</div></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="panel hidden" id="landing">
+            <div class="landing-layout">
+              <section class="module">
+                <div class="module-header">
+                  <div>
+                    <h2>Landing Page Preview</h2>
+                    <p>Offer direction synthesized from evidence and buyer objections.</p>
+                  </div>
+                </div>
+                <div class="module-body">
+                  <div class="landing-hero" id="landingPreview">
+                    <h3>Run research to generate the first-page offer.</h3>
+                    <p>The strongest differentiation angle will appear here.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="module">
+                <div class="module-header">
+                  <div>
+                    <h2>Hooks &amp; Objections</h2>
+                    <p>Launch copy mapped to competitor weaknesses and buyer pushback.</p>
+                  </div>
+                </div>
+                <div class="module-body">
+                  <div class="hook-list" id="hookList">
+                    <div class="empty-state"><div><strong>No copy yet</strong>Run research to build the launch narrative.</div></div>
+                  </div>
+                  <pre id="landingResult"></pre>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="panel hidden" id="about">
+            <div class="landing-layout" style="grid-template-columns: 1fr;">
+              <section class="module" style="max-width: 800px; margin: 0 auto;">
+                <div class="module-header" style="background: linear-gradient(135deg, #1d1d1f 0%, #3a3a3c 100%); color: #ffffff; padding: 32px 24px; border-radius: var(--r-lg) var(--r-lg) 0 0; display: block; border-bottom: 0;">
+                  <h2 style="font-size: 1.8rem; font-weight: 700; margin: 0; letter-spacing: -0.02em; color: #ffffff;">Aayush Mediratta</h2>
+                  <p style="color: rgba(255,255,255,0.75); margin: 6px 0 0; font-size: 0.95rem; font-weight: 500;">Orlando, FL &middot; AI Architect &amp; Enterprise Leader</p>
+                </div>
+                <div class="module-body" style="padding: 32px; display: grid; gap: 28px;">
+                  <div>
+                    <h3 style="font-size: 1.15rem; font-weight: 600; margin: 0 0 12px; color: var(--ink);">About Me</h3>
+                    <p style="color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin: 0 0 16px;">
+                      I help enterprises operationalize AI at scale. With 15+ years across enterprise architecture, AI transformation, solution engineering, and platform innovation, I've partnered with Fortune 500 organizations to turn AI from experimentation into measurable business impact.
+                    </p>
+                    <p style="color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin: 0 0 16px;">
+                      Currently, I lead AI Architecture &amp; Platform Innovation at JAGGAER, focused on enterprise-scale Agentic AI, Generative AI, intelligent automation, and AI platform modernization across procurement and enterprise operations.
+                    </p>
+                    <p style="color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin: 0 0 24px;">
+                      Previously at Kore.ai, I built and scaled global AI advisory and solution engineering organizations, contributing to $100M+ in AI transformation programs while growing global solution engineering teams from 2 to 55+ professionals.
+                    </p>
+                  </div>
+                  
+                  <div style="border-top: 1px solid var(--line); padding-top: 24px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 600; margin: 0 0 14px; color: var(--ink);">Areas of Focus</h3>
+                    <ul style="color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin: 0 0 24px; padding-left: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px;">
+                      <li>Agentic AI &amp; GenAI</li>
+                      <li>LLM &amp; RAG Architectures</li>
+                      <li>Enterprise AI Platforms</li>
+                      <li>AI Governance &amp; Responsible AI</li>
+                      <li>Intelligent Automation</li>
+                      <li>AI Transformation &amp; Operating Models</li>
+                    </ul>
+                  </div>
+                  
+                  <div style="border-top: 1px solid var(--line); padding-top: 24px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 600; margin: 0 0 16px; color: var(--ink);">Contact &amp; Links</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                      
+                      <a href="mailto:aayush@mercpl.us" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); padding: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--card-2); transition: all 150ms ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                        <span style="font-size: 1.5rem;">📧</span>
+                        <div>
+                          <span style="display: block; font-size: 0.75rem; color: var(--subtle); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Email</span>
+                          <strong style="font-size: 0.92rem; font-weight: 600; font-family: var(--mono);">aayush@mercpl.us</strong>
+                        </div>
+                      </a>
+                      
+                      <a href="https://mercpl.us" target="_blank" rel="noreferrer" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); padding: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--card-2); transition: all 150ms ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                        <span style="font-size: 1.5rem;">🌐</span>
+                        <div>
+                          <span style="display: block; font-size: 0.75rem; color: var(--subtle); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Website</span>
+                          <strong style="font-size: 0.92rem; font-weight: 600; font-family: var(--mono);">mercpl.us</strong>
+                        </div>
+                      </a>
+                      
+                      <a href="https://www.linkedin.com/in/aayushmediratta" target="_blank" rel="noreferrer" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); padding: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--card-2); transition: all 150ms ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                        <span style="font-size: 1.5rem;">💼</span>
+                        <div>
+                          <span style="display: block; font-size: 0.75rem; color: var(--subtle); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">LinkedIn</span>
+                          <strong style="font-size: 0.92rem; font-weight: 600; font-family: var(--sans);">aayushmediratta</strong>
+                        </div>
+                      </a>
+                      
+                      <a href="https://github.com/aayushus/" target="_blank" rel="noreferrer" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); padding: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--card-2); transition: all 150ms ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                        <span style="font-size: 1.5rem;">💻</span>
+                        <div>
+                          <span style="display: block; font-size: 0.75rem; color: var(--subtle); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">GitHub</span>
+                          <strong style="font-size: 0.92rem; font-weight: 600; font-family: var(--sans);">aayushus</strong>
+                        </div>
+                      </a>
+                      
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+    <script src="static/app.js"></script>
+  </body>
+</html>

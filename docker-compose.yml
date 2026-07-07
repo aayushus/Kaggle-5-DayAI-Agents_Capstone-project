@@ -1,0 +1,12 @@
+services:
+  scout:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ADK_BACKEND=auto
+      - GOOGLE_MODEL=gemini-2.5-flash
+      - PARALLEL_SEARCH_MODE=basic

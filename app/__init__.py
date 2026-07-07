@@ -1,0 +1,2 @@
+"""SCOUT application package."""
+

@@ -1,0 +1,22 @@
+project_name: string
+brief:
+  concept: string
+  geography: string
+  sector: string
+  funding_scale: string
+competitors:
+  - name: string
+    source_url: string
+    price_monthly: number
+market_sizing:
+  assumptions:
+    monthly_price: number
+    annual_price: number
+    n_global_customers: number
+    n_target_customers: number
+    capture_rate: number
+  bottom_up:
+    tam: number
+    sam: number
+    som: number
+
