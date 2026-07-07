@@ -185,38 +185,29 @@ Northstar implements **5 out of the 6** key concepts from the Kaggle 5-Day Inten
 ### 1. Prerequisites
 Ensure you have Docker and Docker Compose installed.
 
-### 2. Configure Environment
-Copy the environment template file:
-```bash
-cp .env.example .env
-```
-
-Open `.env` and fill in your keys:
-- **`GOOGLE_API_KEY`**: Obtain a key for free/pay-as-you-go from [Google AI Studio](https://aistudio.google.com/).
-- **`PARALLEL_API_KEY`** *(Optional)*: Obtain a search key from [Parallel Search](https://parallel.so/) to enable live web competitive analysis.
-- **`GOOGLE_MODEL`**: Set to your preferred model (e.g., `gemini-2.5-flash` or `gemini-3.1-pro-preview`).
-- **`PARALLEL_SEARCH_MCP_ENABLED`**: Leave `true` to use the hosted Parallel Search MCP in the researcher loop.
-- **`PARALLEL_SEARCH_MCP_URL`**: Defaults to `https://search.parallel.ai/mcp`.
-- **`NORTHSTAR_LOCAL_MCP_ENABLED`**: Leave `true` to let the app consume its own FastMCP server for artifact and market-size tool calls.
-- **`NORTHSTAR_LOCAL_MCP_URL`**: Defaults to `http://127.0.0.1:8000/mcp/sse`.
-- **`ADK_BACKEND`**: Keep as `auto` to use the Google ADK when available and fall back gracefully if not.
-
-
-### 3. Build & Run
-You can spin up the stack in one of two ways:
-
-#### Option A: Run the Bootstrap Script (Recommended)
-This automatically handles environment checks, container teardowns, and builds:
+### 2. Run the Bootstrap Script (Recommended)
+Simply execute the interactive launch script. It automatically detects missing configuration, prompts you for your API keys in the terminal, sets up your `.env` file, spins up the Docker containers, and runs the health watchdog:
 ```bash
 bash restart.sh
 ```
 
-#### Option B: Docker Compose Directly
-```bash
-docker compose up --build -d
-```
+### 3. Manual Configuration (Alternative)
+If you prefer to configure the environment manually or run the containers directly:
 
-Once running, access the interfaces at:
+1. Copy the environment template:
+   ```bash
+   cp .env.example .env
+   ```
+2. Open `.env` and fill in your keys:
+   - **`GOOGLE_API_KEY`**: Obtain a key for free/pay-as-you-go from [Google AI Studio](https://aistudio.google.com/).
+   - **`PARALLEL_API_KEY`** *(Optional)*: Obtain a search key from [Parallel Search](https://parallel.so/) to enable live web competitive analysis.
+3. Spin up the containers manually:
+   ```bash
+   docker compose up --build -d
+   ```
+
+### 4. Access the Workspace
+Once the startup script or docker containers are running, access the interfaces at:
 * **Client App:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
 * **Health Check:** [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
